@@ -170,9 +170,9 @@ void LauncherModel::sendToDock(const QString &key)
     int index = findById(key);
 
     if (index != -1) {
-        QDBusMessage message = QDBusMessage::createMethodCall("com.cutefish.Dock",
+        QDBusMessage message = QDBusMessage::createMethodCall("com.wayfish.Dock",
                                                               "/Dock",
-                                                              "com.cutefish.Dock",
+                                                              "com.wayfish.Dock",
                                                                "add");
         message.setArguments(QList<QVariant>() << key);
         QDBusConnection::sessionBus().asyncCall(message);
@@ -198,9 +198,9 @@ void LauncherModel::removeFromDock(const QString &desktop)
     int index = findById(desktop);
 
     if (index != -1) {
-        QDBusMessage message = QDBusMessage::createMethodCall("com.cutefish.Dock",
+        QDBusMessage message = QDBusMessage::createMethodCall("com.wayfish.Dock",
                                                               "/Dock",
-                                                              "com.cutefish.Dock",
+                                                              "com.wayfish.Dock",
                                                                "remove");
         message.setArguments(QList<QVariant>() << desktop);
         QDBusConnection::sessionBus().asyncCall(message);
