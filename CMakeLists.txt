@@ -10,9 +10,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(ENABLE_TRANSLATIONS "Build translations" ON)
+
 set(QT Core Widgets DBus Quick QuickControls2 LinguistTools)
 find_package(Qt5 REQUIRED ${QT})
 find_package(KF5WindowSystem REQUIRED)
+include(GNUInstallDirs)
 
 set(SRCS
     src/desktopproperties.cpp
@@ -52,10 +55,14 @@ target_link_libraries(${PROJECT_NAME}
         KF5::WindowSystem
 )
 
-file(GLOB TS_FILES translations/*.ts)
-qt5_create_translation(QM_FILES ${TS_FILES})
-add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
-add_dependencies(${PROJECT_NAME} translations)
+if (ENABLE_TRANSLATIONS AND Qt5_LUPDATE_EXECUTABLE)
+    file(GLOB TS_FILES translations/*.ts)
+    qt5_create_translation(QM_FILES ${TS_FILES})
+    add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
+    add_dependencies(${PROJECT_NAME} translations)
+endif()
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${QM_FILES} DESTINATION /usr/share/${PROJECT_NAME}/translations)
+if (ENABLE_TRANSLATIONS AND Qt5_LUPDATE_EXECUTABLE)
+    install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations)
+endif()
